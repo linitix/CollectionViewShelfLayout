@@ -78,7 +78,7 @@ class AppStoreCollectionViewLayoutDemoViewController: UICollectionViewController
     var appData = [Section: [AppDetail]]()
     for (sectionName, apps) in appDataPList {
       let appDetails: [AppDetail]
-      appDetails = apps.flatMap(AppDetail.init(plistData:))
+      appDetails = apps.compactMap(AppDetail.init(plistData:))
       let section = Section(rawValue: sectionName)!
       appData[section] = appDetails
     }
@@ -155,8 +155,8 @@ class AppStoreCollectionViewLayoutDemoViewController: UICollectionViewController
     let view = collectionView.dequeueReusableSupplementaryView(ofKind: kind, withReuseIdentifier: "Header", for: indexPath)
     if let view = view as? AppStoreCollectionSectionHeaderView {
       view.label.text = sections[(indexPath as NSIndexPath).section].rawValue
-      view.button.setTitle("See All >", for: UIControlState())
-      view.button.setTitleColor(UIColor.darkGray, for: UIControlState())
+      view.button.setTitle("See All >", for: UIControl.State())
+      view.button.setTitleColor(UIColor.darkGray, for: UIControl.State())
       view.delegate = self
     }
     return view
@@ -169,7 +169,7 @@ class AppStoreCollectionViewLayoutDemoViewController: UICollectionViewController
     let appStoreViewerController = SKStoreProductViewController()
     appStoreViewerController.delegate = self
     appStoreViewerController.loadProduct(withParameters: [SKStoreProductParameterITunesItemIdentifier : appData.id], completionBlock: { (result, error) in
-      print(result, error)
+      print(result, error?.localizedDescription ?? "Unknown error")
     })
     present(appStoreViewerController, animated: true, completion: nil)
   }
@@ -190,7 +190,7 @@ extension AppStoreCollectionViewLayoutDemoViewController: AppStoreCollectionSect
     let alertController = UIAlertController(title: section.rawValue, message: "You tapped the \(section.rawValue) section.", preferredStyle: .alert)
     
     alertController.addAction(
-      UIAlertAction(title: "OK", style: UIAlertActionStyle.cancel, handler: nil)
+      UIAlertAction(title: "OK", style: UIAlertAction.Style.cancel, handler: nil)
     )
     
     present(alertController, animated: true, completion: nil)

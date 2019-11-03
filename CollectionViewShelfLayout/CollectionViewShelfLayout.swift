@@ -95,7 +95,7 @@ open class CollectionViewShelfLayout: UICollectionViewLayout {
       if let headerView = headerView {
         headerViewLayoutAttributes = CollectionViewShelfLayoutHeaderFooterViewLayoutAttributes(forDecorationViewOfKind: ShelfElementKindCollectionHeader, with: IndexPath(index: 0))
         headerViewLayoutAttributes?.view = headerView
-        let headerViewSize = headerView.systemLayoutSizeFitting(CGSize(width: collectionViewWidth, height: 0.0), withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: UILayoutPriorityFittingSizeLevel)
+        let headerViewSize = headerView.systemLayoutSizeFitting(CGSize(width: collectionViewWidth, height: 0.0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
         headerViewLayoutAttributes?.size = headerViewSize
         headerViewLayoutAttributes?.frame = CGRect(origin: CGPoint(x: collectionBounds.minX, y: currentY), size: headerViewSize)
         currentY += headerViewSize.height
@@ -177,7 +177,7 @@ open class CollectionViewShelfLayout: UICollectionViewLayout {
       if let footerView = footerView {
         footerViewLayoutAttributes = CollectionViewShelfLayoutHeaderFooterViewLayoutAttributes(forDecorationViewOfKind: ShelfElementKindCollectionFooter, with: IndexPath(index: 0))
         footerViewLayoutAttributes?.view = footerView
-        let footerViewSize = footerView.systemLayoutSizeFitting(CGSize(width: collectionViewWidth, height: 0.0), withHorizontalFittingPriority: UILayoutPriorityRequired, verticalFittingPriority: UILayoutPriorityFittingSizeLevel)
+        let footerViewSize = footerView.systemLayoutSizeFitting(CGSize(width: collectionViewWidth, height: 0.0), withHorizontalFittingPriority: .required, verticalFittingPriority: .fittingSizeLevel)
         footerViewLayoutAttributes?.size = footerViewSize
         footerViewLayoutAttributes?.frame = CGRect(origin: CGPoint(x: collectionBounds.minX, y: currentY), size: footerViewSize)
         currentY += footerViewSize.height
@@ -213,7 +213,7 @@ open class CollectionViewShelfLayout: UICollectionViewLayout {
   }
   
   open override func layoutAttributesForElements(in rect: CGRect) -> [UICollectionViewLayoutAttributes]? {
-    let headerAndFooterAttributes: [UICollectionViewLayoutAttributes] = [ headerViewLayoutAttributes, footerViewLayoutAttributes ].flatMap({ $0 }).filter { (attributes) -> Bool in
+    let headerAndFooterAttributes: [UICollectionViewLayoutAttributes] = [ headerViewLayoutAttributes, footerViewLayoutAttributes ].compactMap({ $0 }).filter { (attributes) -> Bool in
       return rect.intersects(attributes.frame)
     }
     
@@ -278,7 +278,7 @@ open class CollectionViewShelfLayout: UICollectionViewLayout {
   open override func invalidateLayout(with context: UICollectionViewLayoutInvalidationContext) {
     if let context = context as? CollectionViewShelfLayoutInvalidationContext,
       let panningInformation = context.panningScrollView,
-      let indexOfPanningScrollView = cellPanningScrollViews.index(of: panningInformation) {
+      let indexOfPanningScrollView = cellPanningScrollViews.firstIndex(of: panningInformation) {
       
       let panningCellsAttributes = cellsLayoutAttributes[indexOfPanningScrollView]
       let minX = panningCellsAttributes.reduce(CGFloat.greatestFiniteMagnitude, { (currentX, attributes) in
